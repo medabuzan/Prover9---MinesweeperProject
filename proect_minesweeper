@@ -1,0 +1,84 @@
+% Saved by Prover9-Mace4 Version 0.5, December 2007.
+
+set(ignore_option_dependencies). % GUI handles dependencies
+
+if(Prover9). % Options for Prover9
+  assign(max_seconds, 60).
+end_if.
+
+if(Mace4).   % Options for Mace4
+  assign(max_seconds, 60).
+end_if.
+
+formulas(assumptions).
+
+% no cell has more mines
+%mine(X) & mine(A) -> X==A.
+
+%cell is mine or not mine
+%mine(X) <-> minusunu(x).
+-mine(X) <-> zero(X) | unu(X) | doi(X) | trei(X) | patru(X).
+
+%no adjacent mines 
+mine(cell_11) -> -mine(cell_12) & -mine(cell_21).
+mine(cell_12) -> -mine(cell_11) & -mine(cell_22) & -mine(cell_13).
+mine(cell_13) -> -mine(cell_12) & -mine(cell_23).
+mine(cell_21) -> -mine(cell_22) & -mine(cell_31) & -mine(cell_11).
+mine(cell_22) -> -mine(cell_12) & -mine(cell_21) & -mine(cell_23) & -mine(cell_32).
+mine(cell_23) -> -mine(cell_13) & -mine(cell_22) & -mine(cell_33).
+mine(cell_31) -> -mine(cell_21) & -mine(cell_32).
+mine(cell_32) -> -mine(cell_31) & -mine(cell_22) & -mine(cell_33).
+mine(cell_33) -> -mine(cell_32) & -mine(cell_23).
+
+% any cell has a number that represents the number of mines around it
+%the mine cell has the number -1 
+
+zero(cell_11) -> -mine(cell_12) & -mine(cell_21).
+zero(cell_12) -> -mine(cell_11) & -mine(cell_22) & -mine(cell_13).
+zero(cell_13) -> -mine(cell_12) & -mine(cell_23).
+zero(cell_21) -> -mine(cell_22) & -mine(cell_31) & -mine(cell_11).
+zero(cell_22) -> -mine(cell_12) & -mine(cell_21) & -mine(cell_23) & -mine(cell_32).
+zero(cell_23) -> -mine(cell_13) & -mine(cell_22) & -mine(cell_33).
+zero(cell_31) -> -mine(cell_21) & -mine(cell_32).
+zero(cell_32) -> -mine(cell_31) & -mine(cell_22) & -mine(cell_33).
+zero(cell_33) -> -mine(cell_32) & -mine(cell_23).
+
+unu(cell_11) -> (mine(cell_12) | mine(cell_21)) & -(mine(cell_12) & mine(cell_21)).
+unu(cell_12) -> (mine(cell_11) & -mine(cell_22) & -mine(cell_13)) | (-mine(cell_11) & mine(cell_22) & -mine(cell_13)) | (-mine(cell_11) & -mine(cell_22) & mine(cell_13)) .
+unu(cell_13) -> (mine(cell_12) & -mine(cell_23)) | (-mine(cell_12) & mine(cell_23)).
+unu(cell_21) -> (mine(cell_22) & -mine(cell_31) & -mine(cell_11)) | (-mine(cell_22) & mine(cell_31) & -mine(cell_11)) | (-mine(cell_22) & -mine(cell_31) & mine(cell_11)).
+unu(cell_22) -> (mine(cell_12) & -mine(cell_21) & -mine(cell_23) & -mine(cell_32)) | (-mine(cell_12) & mine(cell_21) & -mine(cell_23) & -mine(cell_32)) | (-mine(cell_12) & -mine(cell_21) & mine(cell_23) & -mine(cell_32)) | (-mine(cell_12) & -mine(cell_21) & -mine(cell_23) & mine(cell_32)).
+unu(cell_23) -> (mine(cell_13) & -mine(cell_22) & -mine(cell_33)) | (-mine(cell_13) & mine(cell_22) & -mine(cell_33)) | (-mine(cell_13) & -mine(cell_22) & mine(cell_33)).
+unu(cell_31) -> (mine(cell_21) & -mine(cell_32)) | (-mine(cell_21) & mine(cell_32)).
+unu(cell_32) -> (mine(cell_31) & -mine(cell_22) & -mine(cell_33)) | (-mine(cell_31) & mine(cell_22) & -mine(cell_33)) | (-mine(cell_31) & -mine(cell_22) & mine(cell_33)).
+unu(cell_33) -> (mine(cell_32) & -mine(cell_23)) | (-mine(cell_32) & mine(cell_23)).
+
+doi(cell_11) -> mine(cell_12) & mine(cell_21).
+doi(cell_12) -> (mine(cell_11) & mine(cell_22) & -mine(cell_13)) | (mine(cell_11) & -mine(cell_22) & mine(cell_13)) | (-mine(cell_11) & mine(cell_22) & mine(cell_13)) .
+doi(cell_13) -> mine(cell_12) & mine(cell_23).
+doi(cell_21) -> (-mine(cell_22) & mine(cell_31) & mine(cell_11)) | (mine(cell_22) & -mine(cell_31) & mine(cell_11)) | (mine(cell_22) & mine(cell_31) & -mine(cell_11)).
+doi(cell_22) -> (-mine(cell_12) & -mine(cell_21) & mine(cell_23) & mine(cell_32)) | (-mine(cell_12) & mine(cell_21) & -mine(cell_23) & mine(cell_32)) | (-mine(cell_12) & mine(cell_21) & mine(cell_23) & -mine(cell_32)) | (mine(cell_12) & -mine(cell_21) & -mine(cell_23) & mine(cell_32)) | (mine(cell_12) & -mine(cell_21) & mine(cell_23) & -mine(cell_32)) | (mine(cell_12) & mine(cell_21) & -mine(cell_23) & -mine(cell_32)).
+doi(cell_23) -> (-mine(cell_13) & mine(cell_22) & mine(cell_33)) | (mine(cell_13) & -mine(cell_22) & mine(cell_33)) | (mine(cell_13) & mine(cell_22) & -mine(cell_33)).
+doi(cell_31) -> mine(cell_21) & mine(cell_32).
+doi(cell_32) -> (-mine(cell_31) & mine(cell_22) & mine(cell_33)) | (-mine(cell_31) & mine(cell_22) & -mine(cell_33)) | (mine(cell_31) & mine(cell_22) & -mine(cell_33)).
+doi(cell_33) -> mine(cell_32) & mine(cell_23).
+
+trei(cell_12) -> mine(cell_11) & mine(cell_22) & mine(cell_13).
+trei(cell_21) -> mine(cell_22) & mine(cell_31) & mine(cell_11).
+trei(cell_22) -> (-mine(cell_12) & mine(cell_21) & mine(cell_23) & mine(cell_32)) | (mine(cell_12) & -mine(cell_21) & mine(cell_23) & mine(cell_32)) | (mine(cell_12) & mine(cell_21) & -mine(cell_23) & mine(cell_32)) | (mine(cell_12) & mine(cell_21) & mine(cell_23) & -mine(cell_32)).
+trei(cell_23) -> mine(cell_13) & mine(cell_22) & mine(cell_33).
+trei(cell_32) -> mine(cell_31) & mine(cell_22) & mine(cell_33).
+
+patru(cell_22) -> mine(cell_12) & mine(cell_21) & mine(cell_23) & mine(cell_32).
+
+mine(cell_12).
+-mine(cell_11) & -mine(cell_13) & -mine(cell_21) & -mine(cell_22) & -mine(cell_23) & -mine(cell_31) & -mine(cell_32) & -mine(cell_33).
+
+end_of_list.
+
+formulas(goals).
+
+zero(cell_11).
+
+end_of_list.
+
